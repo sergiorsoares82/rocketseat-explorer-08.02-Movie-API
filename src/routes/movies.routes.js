@@ -1,12 +1,13 @@
 const express = require('express');
 const MoviesController = require('../controllers/MoviesController');
+const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const moviesController = new MoviesController();
 const moviesRoutes = express.Router();
 
-moviesRoutes.get('/', moviesController.index);
-moviesRoutes.post('/:user_id', moviesController.create);
-moviesRoutes.get('/:id', moviesController.show);
-moviesRoutes.delete('/:id', moviesController.delete);
+moviesRoutes.get('/', isAuthenticated, moviesController.index);
+moviesRoutes.post('/', isAuthenticated, moviesController.create);
+moviesRoutes.get('/:id', isAuthenticated, moviesController.show);
+moviesRoutes.delete('/:id', isAuthenticated, moviesController.delete);
 
 module.exports = moviesRoutes;

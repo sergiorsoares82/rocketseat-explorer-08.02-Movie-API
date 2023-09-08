@@ -2,7 +2,8 @@ const knex = require('../database/knex');
 
 class MoviesController {
   async index(req, res) {
-    const { user_id, title, tags } = req.query;
+    const { title, tags } = req.query;
+    const user_id = req.user.id;
 
     let movies;
 
@@ -28,20 +29,20 @@ class MoviesController {
     }
 
     const userTags = await knex('tags').where({ user_id });
+    console.log(userTags);
     const moviesWithTags = movies.map((movie) => {
-      const movieTags = userTags.filter((tag) => tag.user_id === movie.id);
+      const movieTags = userTags.filter((tag) => tag.movie_id === movie.id);
       return {
         ...movie,
         movieTags,
       };
     });
 
-    res.json({ moviesWithTags });
+    res.json(moviesWithTags);
   }
 
   async create(req, res) {
-    const { title, description, rating, tags } = req.body;
-    const { user_id } = req.params;
+    const { title, description, rating, tags, user_id } = req.body;
 
     const [movie_id] = await knex('movies').insert({
       title,

@@ -25,7 +25,8 @@ class UsersController {
 
   async update(req, res) {
     const { name, email, password, oldPassword } = req.body;
-    const { user_id } = req.params;
+
+    const user_id = req.user.id;
 
     const user = await knex('users').where({ id: user_id }).first();
     if (!user) {
